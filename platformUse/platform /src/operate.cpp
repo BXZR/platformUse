@@ -33,11 +33,13 @@
 	   theLogC.makeLog(2,"中二病拯救世界!!!__"+ to_string(33));
 	   theLogC.makeLog(3,"男人不二怎么行!!!__"+ to_string(44));
 	    theLogC.makeLog(4,"真理就在这里!!!__"+ to_string(55));
+            cout<<"-------日志测试成功"<<endl;
 	}
    void playForDB()//数据库模块测试方法
 	{
 	  theDBC.DBQuery("insert into test values ('jujietou4','shenyiyang5')");
 	  theDBC.DBSelect("select * from test")  ;
+            cout<<"-------数据库测试成功"<<endl;
 
 	}
    void playforRedis()//Redis模块测测试方法
@@ -46,6 +48,7 @@
                cout<< theRedisC.getValueWithKey("suck") ;
            else
               theRedisC.makeNew("suck","zheshizhenli");
+            cout<<"-------缓存测试成功"<<endl;
 	}
    void playforSocket()//socket测试方法
 	{
@@ -154,11 +157,11 @@ int main()
          theOpreteC.InitTheOperateModule(theLogC);
 	 //上面这些是必要的初始化，测试方法和运行方法怎么玩都行，这里一定不能缺项，而且要保证顺序
 
-playForLog(); 
-playForDB();//数据库模块测试方法
- playforRedis();//Redis模块测测试方法 
+       //playForLog(); //日至测试方法
+       //playForDB();//数据库模块测试方法
+       //playforRedis();//Redis模块测测试方法 
 
-        // server();//服务器方法，真正地开启这个服务器
+         server();//服务器方法，真正地开启这个服务器
 
 return 0;
 }
