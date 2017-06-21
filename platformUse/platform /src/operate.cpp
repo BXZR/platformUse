@@ -33,13 +33,13 @@
 	   theLogC.makeLog(2,"中二病拯救世界!!!__"+ to_string(33));
 	   theLogC.makeLog(3,"男人不二怎么行!!!__"+ to_string(44));
 	    theLogC.makeLog(4,"真理就在这里!!!__"+ to_string(55));
-            cout<<"-------日志测试成功"<<endl;
+            cout<<"\n-------日志测试成功"<<endl;
 	}
    void playForDB()//数据库模块测试方法
 	{
 	  theDBC.DBQuery("insert into test values ('jujietou4','shenyiyang5')");
 	  theDBC.DBSelect("select * from test")  ;
-            cout<<"--------数据库测试成功"<<endl;
+            cout<<"\n--------数据库测试成功"<<endl;
 
 	}
    void playforRedis()//Redis模块测测试方法
@@ -48,7 +48,7 @@
                cout<< theRedisC.getValueWithKey("suck") ;
            else
               theRedisC.makeNew("suck","zheshizhenli");
-            cout<<"-------缓存测试成功"<<endl;
+            cout<<"\n-------缓存测试成功"<<endl;
 	}
    void playforSocket()//socket测试方法
 	{
@@ -114,7 +114,23 @@ void *run(void *arg)
             string theStringGet =  theOpreteC .makeString(receiveString );
            //翻译字符串，这个有可能需要用一个额外的类或者结构来存储信息，在这里只是最简单的一个转换功能作为例子（毕竟要根据协议来）
              theDBC.DBQuery("insert into test values ('"+receiveString+"','"+theStringGet+"')");//插入数据库
-	    //theDBC.DBSelect("select * from test")  ;//查询一波看看查没插进去
+	    //theDBC.DBSelect("selfumeng@fumeng-HP-340-G3:~/git/platformUse$ git diff
+fumeng@fumeng-HP-340-G3:~/git/platformUse$ git push
+Username for 'https://github.com':   
+
+
+
+
+
+
+
+
+
+
+
+
+
+ect * from test")  ;//查询一波看看查没插进去
             if(!theRedisC.isExistKey(receiveString) )
               theRedisC.makeNew(receiveString,theStringGet);//插入，但是插入个后到底干什么还不知道
             
