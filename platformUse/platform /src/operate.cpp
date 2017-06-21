@@ -114,23 +114,7 @@ void *run(void *arg)
             string theStringGet =  theOpreteC .makeString(receiveString );
            //翻译字符串，这个有可能需要用一个额外的类或者结构来存储信息，在这里只是最简单的一个转换功能作为例子（毕竟要根据协议来）
              theDBC.DBQuery("insert into test values ('"+receiveString+"','"+theStringGet+"')");//插入数据库
-	    //theDBC.DBSelect("selfumeng@fumeng-HP-340-G3:~/git/platformUse$ git diff
-fumeng@fumeng-HP-340-G3:~/git/platformUse$ git push
-Username for 'https://github.com':   
-
-
-
-
-
-
-
-
-
-
-
-
-
-ect * from test")  ;//查询一波看看查没插进去
+	    //theDBC.DBSelect("select * from test")  ;//查询一波看看查没插进去
             if(!theRedisC.isExistKey(receiveString) )
               theRedisC.makeNew(receiveString,theStringGet);//插入，但是插入个后到底干什么还不知道
             
