@@ -39,7 +39,7 @@
 	{
 	  theDBC.DBQuery("insert into test values ('jujietou4','shenyiyang5')");
 	  theDBC.DBSelect("select * from test")  ;
-            cout<<"-------数据库测试成功"<<endl;
+            cout<<"--------数据库测试成功"<<endl;
 
 	}
    void playforRedis()//Redis模块测测试方法
