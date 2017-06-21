@@ -33,13 +33,13 @@
 	   theLogC.makeLog(2,"中二病拯救世界!!!__"+ to_string(33));
 	   theLogC.makeLog(3,"男人不二怎么行!!!__"+ to_string(44));
 	    theLogC.makeLog(4,"真理就在这里!!!__"+ to_string(55));
-            cout<<"\n-------日志测试成功"<<endl;
+            cout<<"\n-------日志测试成功-------\n"<<endl;
 	}
    void playForDB()//数据库模块测试方法
 	{
 	  theDBC.DBQuery("insert into test values ('jujietou4','shenyiyang5')");
 	  theDBC.DBSelect("select * from test")  ;
-            cout<<"\n--------数据库测试成功"<<endl;
+            cout<<"\n--------数据库测试成功-------\n"<<endl;
 
 	}
    void playforRedis()//Redis模块测测试方法
@@ -48,7 +48,7 @@
                cout<< theRedisC.getValueWithKey("suck") ;
            else
               theRedisC.makeNew("suck","zheshizhenli");
-            cout<<"\n-------缓存测试成功"<<endl;
+            cout<<"\n-------缓存测试成功--------\n"<<endl;
 	}
    void playforSocket()//socket测试方法
 	{
