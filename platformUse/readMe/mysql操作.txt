@@ -28,7 +28,6 @@ create table theDevices(
 	deviceName varchar(6) not null, 
 	deviceInformation varchar(100), 
 	deviceStatus int not null DEFAULT 1, 
-        urlID varchar(100),
 	producerID int 
 );
 
@@ -39,6 +38,15 @@ create table theDevicesLink(
 	tableType varchar(6) not null, 
 	tablePreName varchar(10) not null DEFAULT 'Table'
 );
+
+
+//链接设备ID和URL的额外查询表
+//为了快速查询URL并减少记录的数量进行的设定
+create table theDevicesURL(  
+	ID int primary key not null, 
+        URL varchar(100) not null
+);
+
 
 //数据表（这个动态建立，需要数据结构和解析），在新加设备类型（数据类型）的时候人手动处理
 //给出示例制作表格的方式
