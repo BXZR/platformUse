@@ -1,0 +1,57 @@
+//新建数据库
+create database platformUse;
+//使用数据库
+use  platformUse;
+
+//用户表的示例
+//ID: 自增，唯一标识,非空
+//authority: 权限，预留项，与后期功能有关
+//password: 登录密码，有可能用到并且非空（长度有限）
+create table theUsers(
+     ID int primary key not null auto_increment,
+     userName varchar(6) not null,
+     userSex int not null,
+     authority int not null,
+     email varchar(10),
+     password varchar(6) not null
+ );
+
+
+
+//设别表示例
+//ID: 自增，唯一标识,非空
+//deviceStatus: 设备当前是否还可以使用，如果不行了是暂留还是定时清理
+//producerID: 预留项目,搞不好还会有生产商信息表，那这个先预留着
+//urlID: 按照下载包的url的ID
+create table theDevices(  
+	ID int primary key not null auto_increment, 
+	deviceName varchar(6) not null, 
+	deviceInformation varchar(100), 
+	deviceStatus int not null DEFAULT 1, 
+        urlID varchar(100),
+	producerID int 
+);
+
+//链接表示例
+//ID: 自增，唯一标识,非空，链接的是设备表的ID
+create table theDevicesLink(  
+	ID int primary key not null, 
+	tableType varchar(6) not null, 
+	tablePreName varchar(10) not null DEFAULT 'Table'
+);
+
+//数据表（这个动态建立，需要数据结构和解析），在新加设备类型（数据类型）的时候人手动处理
+//给出示例制作表格的方式
+//Table只是一个前缀还需要ID%64做一个大表的切分 ，作为查询的定位
+//type 可能需要用于不同种类的数据的表格的查询方式解析.....(这里有一点过于繁琐)
+//例如：Table_1保存两个int
+ 
+create table Table(
+	ID int primary key not null, 
+	value1 int,
+        value2 int,//这个就需要给的type进行动态的创建了
+);
+
+
+
+
