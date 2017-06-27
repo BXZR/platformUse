@@ -4,6 +4,7 @@
 使用数据库：> use  platformUse;
 
 
+desc theUsers; //查看表结构
 
 
 

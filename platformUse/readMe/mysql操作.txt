@@ -18,7 +18,7 @@ create table theUsers(
 
 
 
-//设别表示例
+//设备表示例
 //ID: 自增，唯一标识,非空
 //deviceStatus: 设备当前是否还可以使用，如果不行了是暂留还是定时清理
 //producerID: 预留项目,搞不好还会有生产商信息表，那这个先预留着
@@ -30,12 +30,24 @@ create table theDevices(
 	deviceStatus int not null DEFAULT 1, 
 	producerID int 
 );
+alter table theDevices  add  column useTypeID  int not null ;
+alter table theDevices  add  column dataTypeID  int not null ;
+//上面这两个是重要的ID，特别以补丁的方式列出来
+//useTypeID 使用类型ID，就是apk的URL的记录ID，链接theDevicesURL表
+//dataTypeID 数据类型，例如int,float等等，链接theDevicesLink表
+
+
+
 
 //链接表示例
 //ID: 自增，唯一标识,非空，链接的是设备表的ID
+//tablePreName : 用于拼接表明字符串的前缀名字
+//informaion 关于这种数据类型表的说明
+//tableType 数据表的小类，说实话这个算是预留，有点想多了这里
 create table theDevicesLink(  
 	ID int primary key not null, 
-	tableType varchar(6) not null, 
+	informaion  varchar(100), 
+        tableType  int(6),
 	tablePreName varchar(10) not null DEFAULT 'Table'
 );
 
@@ -44,8 +56,38 @@ create table theDevicesLink(
 //为了快速查询URL并减少记录的数量进行的设定
 create table theDevicesURL(  
 	ID int primary key not null, 
-        URL varchar(100) not null
+        URL varchar(100) not null,
+        information  varchar(100)
 );
+
+
+//公司表
+//ID 公司唯一ID
+//infotmarion 公司的简单介绍
+//contact 公司的电话
+//companyName 公司的名称
+create companies(        
+    ID int primary key not null auto_increment,
+    infotmarion varchar(200),
+    contact varchar(12),
+    companyName varchar(20)
+    );
+
+
+//公司硬件表 用来连接公司和硬件，这是一个多对多的关系
+//ID自增标志
+//companyID 公司ID
+//deviceID 硬件ID
+create table companiesAndDevices( 
+    ID int primary key not null auto_increment,
+    companyID int not null,
+    deviceID int not null
+    );
+
+
+
+
+
 
 
 //数据表（这个动态建立，需要数据结构和解析），在新加设备类型（数据类型）的时候人手动处理
@@ -59,6 +101,7 @@ create table Table(
 	value1 int,
         value2 int,//这个就需要给的type进行动态的创建了
 );
+
 
 
 
