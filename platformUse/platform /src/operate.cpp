@@ -8,14 +8,14 @@
 #include"dataBaseUse.h" 
 #include"logUse.h" 
 #include"socketUse.h"
-#include"operates.h"
+#include"protocolUse.h"
 #include <unistd.h>
 
  logController  theLogC ;//日志文件控制器
  DBController theDBC;//数据库控制器
  redisUse theRedisC;//redis控制器（类名称暂时不统一是因为我认为这个不算是模块，更像是一种插件）
  socketController theSocketC;//socket控制器
- theOperateController theOpreteC;//有关协议的字符串转换控制器
+ protocolUse theProcolC;//协议处理方法
 //这之下是各个模块的测试方法
 
 /*
@@ -26,6 +26,14 @@
 3 [debug]调试
 4 [erro]错误
 */
+
+
+    
+    //协议解析的测试方法
+    void playForProtocoUse()
+    {
+      theProcolC .getString("0x17;control;test;abc123;\0;\0");
+    }
     void playForLog()
 	{
 	    theLogC.makeLog(0,"战斗吧!!!__"+ to_string(11));
@@ -111,12 +119,12 @@ void *run(void *arg)
 		break;
 	    }
            /*************************接下来是所有操作的整合（这个系统的最上层就在这里了）***************************/
-            string theStringGet =  theOpreteC .makeString(receiveString );
+           //// string theStringGet =  theOpreteC .makeString(receiveString );
            //翻译字符串，这个有可能需要用一个额外的类或者结构来存储信息，在这里只是最简单的一个转换功能作为例子（毕竟要根据协议来）
-             theDBC.DBQuery("insert into test values ('"+receiveString+"','"+theStringGet+"')");//插入数据库
+           ////  theDBC.DBQuery("insert into test values ('"+receiveString+"','"+theStringGet+"')");//插入数据库
 	    //theDBC.DBSelect("select * from test")  ;//查询一波看看查没插进去
-            if(!theRedisC.isExistKey(receiveString) )
-              theRedisC.makeNew(receiveString,theStringGet);//插入，但是插入个后到底干什么还不知道
+           //// if(!theRedisC.isExistKey(receiveString) )
+           ////   theRedisC.makeNew(receiveString,theStringGet);//插入，但是插入个后到底干什么还不知道
             
             /******************************************************************************************************/
 	  theSocketC.sendInformation(client_fd,"Do you want a CD？"); 
@@ -153,14 +161,14 @@ int main()
 	 theRedisC.InitRedisModule(theLogC,"127.0.0.1",6379);//redis模块初始化
 	 //参数为，log模块控制器，目标主机，端口号
 	 theSocketC.InitTheSocketModule(theLogC,10005);//socket模块初始化
-         //参数为，log模块控制器
-         theOpreteC.InitTheOperateModule(theLogC);
+         //参数为  DB模块控制器 log模块控制器 redis模块控制器
+         theProcolC.InitTheProtocolModule(theDBC , theLogC , theRedisC );
 	 //上面这些是必要的初始化，测试方法和运行方法怎么玩都行，这里一定不能缺项，而且要保证顺序
 
-       //playForLog(); //日至测试方法
+       //playForLog(); //日志测试方法
        //playForDB();//数据库模块测试方法
        //playforRedis();//Redis模块测测试方法 
-
+        playForProtocoUse();//协议解析测试方法
          server();//服务器方法，真正地开启这个服务器
           //最核心的功能就是入库，其他的都是到时候扩展就好
           //可以考虑的点：网络连接/入库/库表

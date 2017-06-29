@@ -37,7 +37,7 @@ class redisUse
       //加入新的记录，传入参数key 和 value
      void makeNew(string key,string value)
      { 
-         redisReply* reply = (redisReply*)redisCommand(connection,("set "+key +" "+value).c_str());
+        redisReply* reply = (redisReply*)redisCommand(connection,("set "+key +" "+value).c_str());
 	if(strcmp(reply->str ,"OK") == 0)
 	{
            makeLogShow(1,"Key("+key+")-Value("+value+")插入成功");   
