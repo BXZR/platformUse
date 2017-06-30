@@ -17,6 +17,21 @@
  socketController theSocketC;//socket控制器
  protocolUse theProcolC;//协议处理方法
 //这之下是各个模块的测试方法
+ 
+    //协议解析的测试方法
+    void playForProtocoUse()
+    {
+         theProcolC .getString("0x17;1000;10;10;10;\0");
+	 theProcolC .getString("0x17;1001;10;10;10.2;\0");
+	 theProcolC .getString("0x17;1002;10;10;\0");
+	 theProcolC .getString("0x17;1003;10;100;\0");
+	 theProcolC .getString("0x17;2000;10;10;10;100;\0");
+	 theProcolC .getString("0x17;2001;10;10;10;\0");
+	 theProcolC .getString("0x17;2002;10;10;10;\0");
+	 theProcolC .getString("0x17;2003;10;10;108;\0");
+	 theProcolC .getString("0x17;3000;10;10;10;12;\0");
+	 theProcolC .getString("0x17;3001;10;10;\0");
+    }
 
 /*
 日志文件标题类型如下（更新log类的时候注意这里的更新）
@@ -26,14 +41,6 @@
 3 [debug]调试
 4 [erro]错误
 */
-
-
-    
-    //协议解析的测试方法
-    void playForProtocoUse()
-    {
-      theProcolC .getString("0x17;control;test;abc123;\0;\0");
-    }
     void playForLog()
 	{
 	    theLogC.makeLog(0,"战斗吧!!!__"+ to_string(11));
@@ -125,9 +132,9 @@ void *run(void *arg)
 	    //theDBC.DBSelect("select * from test")  ;//查询一波看看查没插进去
            //// if(!theRedisC.isExistKey(receiveString) )
            ////   theRedisC.makeNew(receiveString,theStringGet);//插入，但是插入个后到底干什么还不知道
-            
+            theProcolC . getString(receiveString);
             /******************************************************************************************************/
-	  theSocketC.sendInformation(client_fd,"Do you want a CD？"); 
+	    theSocketC.sendInformation(client_fd,"information geted"); 
          }
     }
 
@@ -169,7 +176,7 @@ int main()
        //playForDB();//数据库模块测试方法
        //playforRedis();//Redis模块测测试方法 
         playForProtocoUse();//协议解析测试方法
-         server();//服务器方法，真正地开启这个服务器
+        server();//服务器方法，真正地开启这个服务器
           //最核心的功能就是入库，其他的都是到时候扩展就好
           //可以考虑的点：网络连接/入库/库表
 

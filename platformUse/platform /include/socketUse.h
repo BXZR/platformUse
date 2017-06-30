@@ -50,7 +50,7 @@ class socketController//socket控制器
             if(isStarted)//为了安全起见包一层，事实上功能一般，结构上看上去好一点
            {
             char revBuf[MAX_NUM]={0};//接受信息最原始的缓冲区，获取到的信息最终传给receiveString（我就是喜欢字符串）
-	    if(read(clientSock,revBuf,sizeof(revBuf))==-1)//第三参数原先是
+	    if(read(clientSock,revBuf,sizeof(revBuf))==-1)
 	    {
 	      makeLogShow(4,"读取数据失败");
               return "";

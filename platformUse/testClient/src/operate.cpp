@@ -14,6 +14,21 @@
 
 using namespace std ;
 
+string operateStrings[] = 
+{
+"0x17;1000;10;10;10;\0",
+"0x17;1001;10;10;10.2;\0",
+"0x17;1002;10;10;\0",
+"0x17;1003;10;100;\0",
+"0x17;2000;10;10;10;100;\0",
+"0x17;2001;10;10;10;\0",
+"0x17;2002;10;10;10;\0",
+"0x17;2003;10;10;108;\0",
+"0x17;3000;10;10;10;12;\0",
+"0x17;3001;10;10;\0"
+};
+
+
 int main()
 {
     int clientSock=-1;
@@ -45,12 +60,15 @@ int main()
     //while(sendString!= "")
     {
          sleep(1);
+
+
+        //发送
+        sendString  = operateStrings[i];
         if(write(clientSock,sendString.c_str(),strlen(sendString.c_str()))==-1)
         {
             printf("send error!\n");
         }
         cout<<"客户端发送了--"<<sendString<<endl;
-        sendString = "CD";
 
         //接收
         if(read(clientSock,revBuf,sizeof(revBuf))==-1)//MAX_NUM
@@ -58,11 +76,11 @@ int main()
             printf("rev error!\n");
         }
         string receive = revBuf;
-       // receive = "Goodbye,my dear client!";
         cout<<"收到服务器的信息 "<<receive<<endl;
         bzero(revBuf,sizeof(revBuf));
         
     }
+        sleep(1);
        sendString = "quit";
        if(write(clientSock,sendString.c_str(),strlen(sendString.c_str()))==-1)
         {

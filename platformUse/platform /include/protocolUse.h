@@ -28,6 +28,8 @@ class protocolUse
 
   void getString(string information)
   {
+
+    //这个下面是面对协议的，从下面收到了一些东西之后进行解析转化存数据库的过程在这里实现
     //按照要求切成字符串数组
     string * theStringClips = stringSplite(information);
     int theStringClipsLength = getStringClipCount(information);
@@ -38,15 +40,12 @@ class protocolUse
     //cout<< record:: commandKinds[1] << "-LL"<<endl;
      if(theStringClipsLength >=2)//数据太短就暂时不管了
     {
-
-     for(int i=0;i<commandCount ;i++)
-     {
-       if( theStringClips[1] == commandKinds [i]  )//字符串比较
-       {
-         operate(i);//终极调用方法，这个方法其实在扩展的时候很有问题
-         break;
-       }
-     }
+        //终极调用方法，这个方法其实在扩展的时候很有问题
+         operate(theStringClips,theStringClipsLength );
+    }
+    else
+    {
+       makeLogShow(4 , "获取的信息不足，无法操作");
     }
   }
 
@@ -116,12 +115,278 @@ class protocolUse
      return i;
     //这种写法仅仅是为了展示结构
    }  
-   //------------------------------这下面是针对一些类型的传输内容的处理操作----------------------------
+//------------------------------------------------这下面是针对一些类型的传输内容的处理操作------------------------------------------------------------------
     
    //这个类的终极底层操作方法，给出int作为区分
-   void operate(int operateType)
+   //注意名称的匹配
+   //这个方法太恶心了，真心不推荐
+   void operate(string * theInformations ,int length)
    {
+
+      if(theInformations[1] == commandKinds[0])
+      {
+         operate_1000(theInformations , length);
+      }
+      else if(theInformations[1] == commandKinds[1])
+      {
+         operate_1001(theInformations , length);
+      }
+      else if(theInformations[1] == commandKinds[2])
+      {
+         operate_1002(theInformations , length);
+      }
+      else if(theInformations[1] == commandKinds[3])
+      {
+         operate_1003(theInformations , length);
+      }
+      else if(theInformations[1] == commandKinds[4])
+      {
+         operate_2000(theInformations , length);
+      }
+      else if(theInformations[1] == commandKinds[5])
+      {
+         operate_2001(theInformations , length);
+      }
+      else if(theInformations[1] == commandKinds[6])
+      {
+         operate_2002(theInformations , length);
+      }
+      else if(theInformations[1] == commandKinds[7])
+      {
+         operate_2003(theInformations , length);
+      }
+      else if(theInformations[1] == commandKinds[8])
+      {
+         operate_3000(theInformations , length);
+      }
+      else if(theInformations[1] == commandKinds[9])
+      {
+         operate_3001(theInformations , length);
+      }
+      else
+      {
+        makeLogShow(4 , "找不到方法："+theInformations[1]);
+      }  
+     
+
    }
+
+
+   //接下来的方法分别是每一种协议数据解析的子方法，仅仅是一个权宜之计
+   //此外，因为规定已经很严格了，我这里直接使用下标进行访问数据
+   //难点：怎么将这些方法进行整合？在这里罗列方法只是对代码的浪费了......
+
+   /*
+	数据包命令字段：1000
+        数据字段1：设备ID
+        数据字段2：企业ID
+        数据字段3：部门ID
+   */
+   void operate_1000(string * information,int length)
+   {
+     if(length ==5)//开头，类型，数据1，数据2，数据3
+     {
+     int deviceID =  stringToInt(  information[2]);
+     int companyID = stringToInt(  information[3]);
+     int departmentID = stringToInt(  information[4]);
+
+     //接下来应该是缓存和数据库的操作
+      makeLogShow(0,"operate_1000 解析完成");
+      return ;
+     }
+     makeLogShow(4,"数据格式不正确，无法解析。");
+   }
+
+
+    /*
+	数据包命令字段：1001
+	数据字段1：设备ID
+	数据字段2：数据类型(温湿度等)
+	数据字段3：采集的数据(整数浮点数均可)
+    */
+   void operate_1001(string * information,int length)
+   {
+     if(length ==5)//开头，类型，数据1，数据2，数据3
+     {
+     int deviceID =  stringToInt(  information[2]);
+     int dataTypeID = stringToInt(  information[3]);
+     float data = stringToFloat(  information[4]);
+
+     //接下来应该是缓存和数据库的操作
+      makeLogShow(0,"operate_1001 解析完成");
+      return ;
+     }
+     makeLogShow(4,"数据格式不正确，无法解析。");
+   }
+
+  /*
+	数据包命令字段：1002
+	数据字段1：设备ID(受控方)
+	数据字段2：开关标记
+  */
+     void operate_1002(string * information,int length)
+   {
+     if(length ==4)//开头，类型，数据1，数据2
+     {
+     int deviceID =  stringToInt(  information[2]);
+     int switchOpen = stringToInt(  information[3]);
+  
+
+     //接下来应该是缓存和数据库的操作
+      makeLogShow(0,"operate_1002 解析完成");
+      return ;
+     }
+     makeLogShow(4,"数据格式不正确，无法解析。");
+   }
+
+ /*
+	数据包命令字段：1003
+	数据字段1：设备ID(受控方)
+	数据字段2：频率
+ */
+     void operate_1003(string * information,int length)
+   {
+     if(length ==4)//开头，类型，数据1，数据2
+     {
+     int deviceID =  stringToInt(  information[2]);
+     int frequency = stringToInt(  information[3]);
+  
+
+     //接下来应该是缓存和数据库的操作
+      makeLogShow(0,"operate_1003 解析完成");
+      return ;
+     }
+     makeLogShow(4,"数据格式不正确，无法解析。");
+   }
+
+  /*
+	数据包命令字段：2000
+	数据字段1：汇聚节点设备ID
+	数据字段2：Zigbee终端设备ID
+	数据字段3：数据类型(温湿度等)
+	数据字段4：采集的数据(整数浮点数均可)
+  */
+    void operate_2000(string * information,int length)
+   {
+     if(length ==6)//开头，类型，数据1，数据2, 数据3,数据4
+     {
+     int deviceRootID =  stringToInt(  information[2]);
+     int deviceID =  stringToInt(  information[3]);
+     int dataTypeID = stringToInt(  information[4]);
+     float data = stringToFloat(  information[5]);
+
+     //接下来应该是缓存和数据库的操作
+      makeLogShow(0,"operate_2000 解析完成");
+      return ;
+     }
+     makeLogShow(4,"数据格式不正确，无法解析。");
+   }
+  
+ /*
+	数据包命令字段：2001
+	数据字段1：汇聚节点设备ID
+	数据字段2：企业ID
+	数据字段3：部门ID
+ */
+    void operate_2001(string * information,int length)
+   {
+     if(length ==5)//开头，类型，数据1，数据2, 数据3 
+     {
+     int deviceRootID =  stringToInt(  information[2]);
+     int companyID = stringToInt(  information[3]);
+     int departmentID = stringToInt(  information[4]);
+
+     //接下来应该是缓存和数据库的操作
+      makeLogShow(0,"operate_2001 解析完成");
+      return ;
+     }
+     makeLogShow(4,"数据格式不正确，无法解析。");
+   }
+
+/*
+	数据包命令字段：2002
+	数据字段1：汇聚节点设备ID
+	数据字段2：继电器所在设备ID
+	数据字段3：开关标记
+*/
+    void operate_2002(string * information,int length)
+   {
+     if(length ==5)//开头，类型，数据1，数据2, 数据3 
+     {
+     int deviceRootID =  stringToInt(  information[2]);
+     int deviceID = stringToInt(  information[3]);
+     int switchType = stringToInt(  information[4]);
+
+     //接下来应该是缓存和数据库的操作
+      makeLogShow(0,"operate_2002 解析完成");
+      return ;
+     }
+     makeLogShow(4,"数据格式不正确，无法解析。");
+   }
+
+/*
+	数据包命令字段：2003
+	数据字段1：汇聚节点设备ID
+	数据字段2：采集节点设备ID
+	数据字段3：频率
+*/
+    void operate_2003(string * information,int length)
+   {
+     if(length ==5)//开头，类型，数据1，数据2, 数据3 
+     {
+     int deviceRootID =  stringToInt(  information[2]);
+     int deviceID = stringToInt(information[3]);
+     int frequency = stringToFloat(  information[4]);
+
+     //接下来应该是缓存和数据库的操作
+      makeLogShow(0,"operate_2003 解析完成");
+      return ;
+     }
+     makeLogShow(4,"数据格式不正确，无法解析。");
+   }
+
+/*
+	数据包命令字段：3000
+	数据字段1：增添的设备ID
+	数据字段2：设备类型(Zigbee、汇聚节点或其他)
+	数据字段3：企业ID
+	数据字段4：部门ID
+*/
+    void operate_3000(string * information,int length)
+   {
+     if(length ==6)//开头，类型，数据1，数据2, 数据3, 数据4
+     {
+     int deviceRootID =  stringToInt(  information[2]);
+     int deviceTypeID = stringToInt(information[3]);
+     int companyID = stringToInt(  information[4]);
+     int departmentID = stringToInt(  information[5]);
+
+     //接下来应该是缓存和数据库的操作
+      makeLogShow(0,"operate_3000 解析完成");
+      return ;
+     }
+     makeLogShow(4,"数据格式不正确，无法解析。");
+   }
+
+/*
+	数据包命令字段：3001
+	数据字段1：删除的设备ID
+	数据字段2：设备类型
+*/
+ void operate_3001(string * information,int length)
+   {
+     if(length ==4)//开头，类型，数据1，数据2, 数据3 
+     {
+     int deviceID =  stringToInt(  information[2]);
+     int deviceTypeID = stringToInt(information[3]);
+
+     //接下来应该是缓存和数据库的操作
+      makeLogShow(0,"operate_3001 解析完成");
+      return ;
+     }
+     makeLogShow(4,"数据格式不正确，无法解析。");
+   }
+
 };
  
 
