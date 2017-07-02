@@ -6,11 +6,13 @@
 
 
 //所有我编写的Use头文件原则上都只会在这里引用
+//这里的调用顺序不可以被打乱
 #include"logUse.h" 
 #include"redisUse.h" 
 #include"dataBaseUse.h" 
 #include"socketUse.h"
 #include"protocolUse.h"
+#include"commandUse.h"
 
 #include <unistd.h>
 
@@ -19,20 +21,23 @@
  redisUse theRedisC;//redis控制器（类名称暂时不统一是因为我认为这个不算是模块，更像是一种插件）
  socketController theSocketC;//socket控制器
  protocolUse theProcolC;//协议处理方法
+ CommandUse theCommandC;//命令处理方法
 //这之下是各个模块的测试方法
  
     //协议解析的测试方法
     void playForProtocoUse()
     {
-         theProcolC .getString("0x17;1000;10;10;10;\0");
+         theProcolC .getString("0x17;1000;12;\0");
 	 theProcolC .getString("0x17;1001;10;10;10.2;\0");
 	 theProcolC .getString("0x17;1002;10;10;\0");
 	 theProcolC .getString("0x17;1003;10;100;\0");
-	 theProcolC .getString("0x17;2000;10;10;10;100;\0");
-	 theProcolC .getString("0x17;2001;10;10;10;\0");
-	 theProcolC .getString("0x17;2002;10;10;10;\0");
-	 theProcolC .getString("0x17;2003;10;10;108;\0");
-	 theProcolC .getString("0x17;3000;10;10;10;12;\0");
+	 theProcolC .getString("0x17;2000;10;10;100;\0");
+	 theProcolC .getString("0x17;2001;17;\0");
+	 theProcolC .getString("0x17;2002;10;10;\0");
+	 theProcolC .getString("0x17;2003;10;19;\0");
+	 theProcolC .getString("0x17;2004;102;\0");
+	 theProcolC .getString("0x17;2005;103;\0");
+	 theProcolC .getString("0x17;3000;10;10;10;12;5;\0");
 	 theProcolC .getString("0x17;3001;10;10;\0");
     }
 
@@ -55,8 +60,14 @@
 	}
    void playForDB()//数据库模块测试方法
 	{
-	  theDBC.DBQuery("insert into test values ('jujietou4','shenyiyang5')");
-	  theDBC.DBSelect("select * from test")  ;
+	  //theDBC.DBQuery("insert into test values ('jujietou4','shenyiyang5')");
+	 // theDBC.DBSelect("select * from test")  ;
+ 
+	 theDBC.makeDepartmentTable(1);
+	 theDBC.makeUserTable(1);
+	 theDBC.makeDevTable(1);
+	 theDBC.makeDataTable(1);//这个比较特殊，目前的参数表只有businessID, 后期应该会加上typeID
+	 theDBC.makeProjectTable(1);
             cout<<"\n--------数据库测试成功-------\n"<<endl;
 
 	}
@@ -137,7 +148,13 @@ void *run(void *arg)
            ////   theRedisC.makeNew(receiveString,theStringGet);//插入，但是插入个后到底干什么还不知道
             theProcolC . getString(receiveString);
             /******************************************************************************************************/
-	    theSocketC.sendInformation(client_fd,"information geted"); 
+	    //theSocketC.sendInformation(client_fd,"information geted"); 
+
+
+            //如果有命令需要对某硬件进行操控
+            string command = theCommandC .setInformation(receiveString);
+            theSocketC.sendInformation(client_fd, command ); 
+            
          }
     }
 
@@ -151,7 +168,7 @@ void server()
         client_fd = theSocketC.acceptSocket();
         if(client_fd<0)  
         {  
-           makeLog(4,"并没有被接受");
+            makeLog(4,"并没有被接受服务器被迫停止，原因有可能是端口被占用，请重试");
             theSocketC. closeServer(); 
             return;  
         }  
@@ -166,7 +183,11 @@ int main()
 {
 	  theLogC.InitTheLogModule("./log/");//Log模块初始化
 	  //参数是要存日志makeLog的目录
-	 theDBC.InitTheDBModule(theLogC,"localhost","root","root","platformUse");//数据库模块的初始化
+          
+          //不断删除和生成的测试数据库 "demos"
+          //测试用数据库 "platformUse"
+          //正式用数据库 "platformIOT"
+	 theDBC.InitTheDBModule(theLogC,"localhost","root","root","demos");//数据库模块的初始化
 	 //参数从左到右分别是：log模块控制器，目标主机，用户名，密码，要用到的数据库名字
 	 theRedisC.InitRedisModule(theLogC,"127.0.0.1",6379);//redis模块初始化
 	 //参数为，log模块控制器，目标主机，端口号
@@ -175,13 +196,13 @@ int main()
          theProcolC.InitTheProtocolModule(theDBC , theLogC , theRedisC );
 	 //上面这些是必要的初始化，测试方法和运行方法怎么玩都行，这里一定不能缺项，而且要保证顺序
 
-       //playForLog(); //日志测试方法
-       //playForDB();//数据库模块测试方法
-       //playforRedis();//Redis模块测测试方法 
-        playForProtocoUse();//协议解析测试方法
+        //playForLog(); //日志测试方法
+        // playForDB();//数据库模块测试方法
+        //playforRedis();//Redis模块测测试方法 
+        //playForProtocoUse();//协议解析测试方法
         server();//服务器方法，真正地开启这个服务器
-          //最核心的功能就是入库，其他的都是到时候扩展就好
-          //可以考虑的点：网络连接/入库/库表
+        //最核心的功能就是入库，其他的都是到时候扩展就好
+        //可以考虑的点：网络连接/入库/库表
 
 return 0;
 }

@@ -33,15 +33,183 @@ class DBController
        }
        makeLogShow(1,"数据库模块已经启动");
       }
+      
+      //--------------------------------------------------打包的建表操作--------------------------------------------------------//
+      //说明： 这些方法有可能永远不会使用，并且因为现在在设定初期，参数表未必同意，因此没有再做额外的封装 
+      //动态建立公司部门表
+      /*
+           CREATE TABLE `iot_businessid_department`(
+	  `department_id` int(5) NOT NULL AUTO_INCREMENT,
+	  `department_name` varchar(32) NOT NULL COMMENT '部门名称',
+	  `manager_id` int(5) DEFAULT '0' COMMENT '部门经理id',
+	  `ctime` int(10) DEFAULT '0',
+	  `flag` tinyint(1) DEFAULT '0' COMMENT '预留字段',
+	  PRIMARY KEY (`department_id`)
+	) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=100 ;
+      */
+      void makeDepartmentTable(int businessid)
+      {
+	 string theMakeStringt =
+          "  CREATE TABLE `iot_"+to_string(businessid )+"_department`"+
+          "( `department_id` int(5) NOT NULL AUTO_INCREMENT,"+
+          "`department_name` varchar(32) NOT NULL COMMENT '部门名称',"+
+	  "`manager_id` int(5) DEFAULT '0' COMMENT '部门经理id',"+
+	  "`ctime` int(10) DEFAULT '0',"+
+	  "`flag` tinyint(1) DEFAULT '0' COMMENT '预留字段',"+
+	  "PRIMARY KEY (`department_id`)"+
+	  ") ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=100 ;";
+           DBQuery(theMakeStringt);
+      }
+      //动态建立公司的人员表
+      /*
+           CREATE TABLE `iot_businessid_user` (
+	  `user_id` int(10) NOT NULL AUTO_INCREMENT,
+	  `login_id` int(10) DEFAULT '0' NOT NULL,
+	  `password` char(32) COLLATE utf8_unicode_ci NOT NULL,
+	  `realname` char(6) COLLATE utf8_unicode_ci NOT NULL,
+	  `department_id` int(5) NOT NULL,
+	  `tel` char(11) COLLATE utf8_unicode_ci DEFAULT NULL,
+	  `sex` char(2) COLLATE utf8_unicode_ci NOT NULL,
+	  `email`    varchar(64) NOT NULL,
+	  `authority` tinyint(1) DEFAULT '0',
+	  `ctime` int(10) DEFAULT '0' NOT NULL,
+	  `mtime` int(10) DEFAULT NULL,
+	  `flag` tinyint(1) DEFAULT '0',
+	  PRIMARY KEY (`user_id`),
+	  KEY `department_id` (`department_id`)
+	) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=1000 ;
+      */
+      void makeUserTable(int businessid)
+      {
+	 string theMakeStringt =  
+          "CREATE TABLE `iot_"+to_string(businessid )+"_user` ("+
+	  "`user_id` int(10) NOT NULL AUTO_INCREMENT,"+
+	  "`login_id` int(10) DEFAULT '0' NOT NULL,"+
+	  "`password` char(32) COLLATE utf8_unicode_ci NOT NULL,"+
+	  "`realname` char(6) COLLATE utf8_unicode_ci NOT NULL,"+
+	  "`department_id` int(5) NOT NULL,"+
+	  "`tel` char(11) COLLATE utf8_unicode_ci DEFAULT NULL,"+
+	  "`sex` char(2) COLLATE utf8_unicode_ci NOT NULL,"+
+	  "`email`    varchar(64) NOT NULL,"+
+	  "`authority` tinyint(1) DEFAULT '0',"+
+	  "`ctime` int(10) DEFAULT '0' NOT NULL,"+
+	  "`mtime` int(10) DEFAULT NULL,"+
+	  "`flag` tinyint(1) DEFAULT '0',"+
+	  "PRIMARY KEY (`user_id`),"
+	  "KEY `department_id` (`department_id`)"
+	  ") ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=1000 ;";
+           DBQuery(theMakeStringt);
+      }
+      //动态建立公司的设备表
+      /*
+	   CREATE TABLE `iot_businessid_dev` (
+	  `devid`  int(10) NOT NULL COMMENT '设备唯一标识符', 
+	  `devname` varchar(64) NOT NULL COMMENT '设备名字',
+	  `data_type_id` int(10) NOT NULL COMMENT '采集信息格式id',
+	  `department_id` int(5) DEFAULT '0' NOT NULL COMMENT '所属部门id',
+	  `info` varchar(64) NOT NULL COMMENT '设备采集到数据的单位'
+	  `maker` varchar(127) DEFAULT NULL COMMENT '制造商',
+	  `phone` char(11) DEFAULT NULL COMMENT '联系方式',
+	  `ctime` int(10) DEFAULT '0' COMMENT  '安装时间',
+	  `flag` tinyint(1) DEFAULT '0' COMMENT '是否有效',
+	  PRIMARY KEY (`devid`),
+	  KEY `department_id` (`department_id`)
+	) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT '设备表';
+      */
+         void makeDevTable(int businessid)
+         {
+	 string theMakeStringt =  
+   	  " CREATE TABLE `iot_"+to_string(businessid )+"_dev` ("+
+	  "`devid`  int(10) NOT NULL COMMENT '设备唯一标识符',"+ 
+	  "`devname` varchar(64) NOT NULL COMMENT '设备名字',"+
+	  "`data_type_id` int(10) NOT NULL COMMENT '采集信息格式id',"+
+	  "`department_id` int(5) DEFAULT '0' NOT NULL COMMENT '所属部门id',"+
+	  "`info` varchar(64) NOT NULL COMMENT '设备采集到数据的单位' ,"+
+	  "`maker` varchar(127) DEFAULT NULL COMMENT '制造商',"+
+	  "`phone` char(11) DEFAULT NULL COMMENT '联系方式',"+
+	  "`ctime` int(10) DEFAULT '0' COMMENT  '安装时间',"+
+	  "`flag` tinyint(1) DEFAULT '0' COMMENT '是否有效',"+
+	  "PRIMARY KEY (`devid`),"+
+	  "KEY `department_id` (`department_id`)"+
+          ")ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT '设备表';"
+          ;
+           DBQuery(theMakeStringt);
+      }
+      //动态建立公司的数据表
+      /*
+	   CREATE TABLE `iot_businessid_data` (
+	  `data_id` int(10) NOT NULL AUTO_INCREMENT,
+	  `devid`   int(10) NOT NULL COMMENT '设备唯一标识符', 
+	  `data1` char(10) NOT NULL COMMENT '采集到的信息',
+	  `ctime` int(10) DEFAULT '0' COMMENT  '采集时间',
+	  `flag` tinyint(1) DEFAULT '0' COMMENT '是否有效',
+	  PRIMARY KEY (`data_id`),
+	  KEY `devid` (`devid`)
+	  ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT '信息表';
+      */
+       void makeDataTable(int businessid)//这个表待定在解析的地方还有必要处理，这个方法仅仅作为原型出现
+         {
+	 string theMakeStringt =  
+          "CREATE TABLE `iot_"+to_string(businessid )+"_data` ("+
+	  "`data_id` int(10) NOT NULL AUTO_INCREMENT,"+
+	  "`devid`   int(10) NOT NULL COMMENT '设备唯一标识符',"+ 
+	  "`data1` char(10) NOT NULL COMMENT '采集到的信息',"+
+	  "`ctime` int(10) DEFAULT '0' COMMENT  '采集时间',"+
+	  "`flag` tinyint(1) DEFAULT '0' COMMENT '是否有效',"+
+	  "PRIMARY KEY (`data_id`),"+
+	  "KEY `devid` (`devid`)"+
+	  ") ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT '信息表';"
+          ;
+           DBQuery(theMakeStringt);
+      }
+      //动态创建公司项目表
+      /*
+	  CREATE TABLE `iot_businessid__project` (
+	  `project_id` int(10) NOT NULL AUTO_INCREMENT,
+	  `department_id` int(5) NOT NULL COMMENT '部门id',
+	  `project_name` varchar(64) DEFAULT NULL COMMENT '项目名',
+	  `owner_id` int(10) NOT NULL COMMENT '创建者',
+	  `ctime` int(10) DEFAULT '0',
+	  `mtime` int(10) DEFAULT '0',
+	  `authority` tinyint(1) DEFAULT '0' COMMENT '预留权限字段', 
+	  `flag` tinyint(1) DEFAULT '0',
+	  PRIMARY KEY (`project_id`)
+	  ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=5 ;
+      */
+       void makeProjectTable(int businessid)//这个表待定在解析的地方还有必要处理，这个方法仅仅作为原型出现
+         {
+	 string theMakeStringt =  
+          "CREATE TABLE `iot_"+to_string(businessid )+"_project` ("+
+	  "`project_id` int(10) NOT NULL AUTO_INCREMENT,"+
+	  "`department_id` int(5) NOT NULL COMMENT '部门id',"+
+	  "`project_name` varchar(64) DEFAULT NULL COMMENT '项目名',"+
+	  "`owner_id` int(10) NOT NULL COMMENT '创建者',"+
+	  "`ctime` int(10) DEFAULT '0',"+
+	  "`mtime` int(10) DEFAULT '0',"+
+	  "`authority` tinyint(1) DEFAULT '0' COMMENT '预留权限字段', "+
+	  "`flag` tinyint(1) DEFAULT '0',"+
+	  "PRIMARY KEY (`project_id`)"+
+	  ") ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=5 ;"
+          ;
+           DBQuery(theMakeStringt);
+      } 
 
-      //没有返回值的操作人家已经打包好了，直接用
+     //--------------------------------------------------打包的数据库操作--------------------------------------------------------//
+
+       //向指定公司的指定表插入数据
+       void insertDataValues()
+       {
+       }
+    
+      //没有返回值的操作人家已经打包好了，直接用(因为权限超级强大，慎用)
+      //这个方法只是在增加新的数据的时候才可以使用，一般不会使用这种语句
+      //当然，作为内部，这是一个究极的建表操作，因为有一些表是需要动态建立和删除的
       void DBQuery(string sql)//增删改都是一样的，传入sql语句就可以
       {
         if(mysql_query(&connection, sql.c_str()))
-            makeLogShow(4,"数据插入失败");
-        else
-           makeLogShow(1,"数据插入成功");
-
+            makeLogShow(4,"数据操作失败");
+        else 
+            makeLogShow(1,"数据操作成功");
       }
       //说实话这个查询只不过就是后台验证是否正确操作了数据库
       //真正的前台调用不可能用这种方法进行，所以这个方法事实上也就算是自己看着玩的......

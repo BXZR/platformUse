@@ -32,6 +32,7 @@ class protocolUse
 
   void getString(string information)
   {
+    //在这里应该做一个区分的
 
     //这个下面是面对协议的，从下面收到了一些东西之后进行解析转化存数据库的过程在这里实现
     //按照要求切成字符串数组
@@ -56,8 +57,8 @@ class protocolUse
 
   private:
     
-    int commandCount = 10;
-    string commandKinds[10]  = {"1000" , "1001" ,"1002" , "1003" , "2000" ,"2001" , "2002" , "2003" , "3000" , "3001"};
+    int commandCount = 12;
+    string commandKinds[12]  = {"1000" , "1001" ,"1002" , "1003" , "2000" ,"2001" , "2002" , "2003" , "2004" , "2005" , "3000" , "3001"};
 
     logController  theLogC ;//日志文件控制器
     DBController theDBC;//数据库控制器
@@ -161,9 +162,17 @@ class protocolUse
       }
       else if(theInformations[1] == commandKinds[8])
       {
-         operate_3000(theInformations , length);
+         operate_2004(theInformations , length);
       }
       else if(theInformations[1] == commandKinds[9])
+      {
+         operate_2005(theInformations , length);
+      }
+      else if(theInformations[1] == commandKinds[10])
+      {
+         operate_3000(theInformations , length);
+      }
+      else if(theInformations[1] == commandKinds[11])
       {
          operate_3001(theInformations , length);
       }
@@ -183,17 +192,12 @@ class protocolUse
    /*
 	数据包命令字段：1000
         数据字段1：设备ID
-        数据字段2：企业ID
-        数据字段3：部门ID
    */
    void operate_1000(string * information,int length)
    {
-     if(length ==5)//开头，类型，数据1，数据2，数据3
+     if(length ==3)//开头，类型，数据1
      {
      int deviceID =  stringToInt(  information[2]);
-     int companyID = stringToInt(  information[3]);
-     int departmentID = stringToInt(  information[4]);
-
      //接下来应该是缓存和数据库的操作
       makeLogShow(0,"operate_1000 解析完成");
       return ;
@@ -212,9 +216,9 @@ class protocolUse
    {
      if(length ==5)//开头，类型，数据1，数据2，数据3
      {
-     int deviceID =  stringToInt(  information[2]);
-     int dataTypeID = stringToInt(  information[3]);
-     float data = stringToFloat(  information[4]);
+     int deviceID =  stringToInt(information[2]);
+     int dataTypeID = stringToInt(information[3]);
+     string data = information[4];
 
      //接下来应该是缓存和数据库的操作
       makeLogShow(0,"operate_1001 解析完成");
@@ -267,17 +271,15 @@ class protocolUse
 	数据包命令字段：2000
 	数据字段1：汇聚节点设备ID
 	数据字段2：Zigbee终端设备ID
-	数据字段3：数据类型(温湿度等)
-	数据字段4：采集的数据(整数浮点数均可)
+	数据字段3：采集的数据(整数浮点数均可)
   */
     void operate_2000(string * information,int length)
    {
-     if(length ==6)//开头，类型，数据1，数据2, 数据3,数据4
+     if(length ==5)//开头，类型，数据1，数据2, 数据3 
      {
      int deviceRootID =  stringToInt(  information[2]);
      int deviceID =  stringToInt(  information[3]);
-     int dataTypeID = stringToInt(  information[4]);
-     float data = stringToFloat(  information[5]);
+     string  data =   information[4];
 
      //接下来应该是缓存和数据库的操作
       makeLogShow(0,"operate_2000 解析完成");
@@ -289,17 +291,12 @@ class protocolUse
  /*
 	数据包命令字段：2001
 	数据字段1：汇聚节点设备ID
-	数据字段2：企业ID
-	数据字段3：部门ID
  */
     void operate_2001(string * information,int length)
    {
-     if(length ==5)//开头，类型，数据1，数据2, 数据3 
+     if(length ==3)//开头，类型，数据1
      {
      int deviceRootID =  stringToInt(  information[2]);
-     int companyID = stringToInt(  information[3]);
-     int departmentID = stringToInt(  information[4]);
-
      //接下来应该是缓存和数据库的操作
       makeLogShow(0,"operate_2001 解析完成");
       return ;
@@ -309,17 +306,15 @@ class protocolUse
 
 /*
 	数据包命令字段：2002
-	数据字段1：汇聚节点设备ID
-	数据字段2：继电器所在设备ID
-	数据字段3：开关标记
+	数据字段1：设备ID
+	数据字段2：开关标记
 */
     void operate_2002(string * information,int length)
    {
-     if(length ==5)//开头，类型，数据1，数据2, 数据3 
+     if(length ==4)//开头，类型，数据1，数据2, 数据3 
      {
-     int deviceRootID =  stringToInt(  information[2]);
-     int deviceID = stringToInt(  information[3]);
-     int switchType = stringToInt(  information[4]);
+     int deviceID = stringToInt(  information[2]);
+     int switchType = stringToInt(  information[3]);
 
      //接下来应该是缓存和数据库的操作
       makeLogShow(0,"operate_2002 解析完成");
@@ -330,17 +325,15 @@ class protocolUse
 
 /*
 	数据包命令字段：2003
-	数据字段1：汇聚节点设备ID
-	数据字段2：采集节点设备ID
-	数据字段3：频率
+	数据字段1：设备ID
+	数据字段2：频率
 */
     void operate_2003(string * information,int length)
    {
-     if(length ==5)//开头，类型，数据1，数据2, 数据3 
+     if(length ==4)//开头，类型，数据1，数据2 
      {
-     int deviceRootID =  stringToInt(  information[2]);
-     int deviceID = stringToInt(information[3]);
-     int frequency = stringToFloat(  information[4]);
+     int deviceID = stringToInt(information[2]);
+     int frequency = stringToFloat(  information[3]);
 
      //接下来应该是缓存和数据库的操作
       makeLogShow(0,"operate_2003 解析完成");
@@ -350,26 +343,59 @@ class protocolUse
    }
 
 /*
+  	数据包命令字段：2004
+	数据字段1：增添的设备ID
+*/
+   void operate_2004(string * information,int length)
+   {
+     if(length ==3)//开头，类型，数据1
+     {
+     int deviceID = stringToInt(information[2]);
+     //接下来应该是缓存和数据库的操作
+      makeLogShow(0,"operate_2004 解析完成");
+      return ;
+     }
+     makeLogShow(4,"数据格式不正确，无法解析。");
+   }
+/*
+  	数据包命令字段：2005
+	数据字段1：删除的设备ID
+*/
+   void operate_2005(string * information,int length)
+   {
+     if(length ==3)//开头，类型，数据1
+     {
+     int deviceID = stringToInt(information[2]);
+     //接下来应该是缓存和数据库的操作
+      makeLogShow(0,"operate_2005 解析完成");
+      return ;
+     }
+     makeLogShow(4,"数据格式不正确，无法解析。");
+   }
+
+
+/*
 	数据包命令字段：3000
 	数据字段1：增添的设备ID
 	数据字段2：设备类型(Zigbee、汇聚节点或其他)
 	数据字段3：企业ID
 	数据字段4：部门ID
+        数据字段5：部门ID
 */
     void operate_3000(string * information,int length)
    {
-     if(length ==6)//开头，类型，数据1，数据2, 数据3, 数据4
+     if(length ==7)//开头，类型，数据1，数据2, 数据3, 数据4, 数据5
      {
      int deviceRootID =  stringToInt(  information[2]);
      int deviceTypeID = stringToInt(information[3]);
      int companyID = stringToInt(  information[4]);
      int departmentID = stringToInt(  information[5]);
-
+     int projectID = stringToInt(  information[6]);
      //接下来应该是缓存和数据库的操作
       makeLogShow(0,"operate_3000 解析完成");
       return ;
      }
-     makeLogShow(4,"数据格式不正确，无法解析。");
+     makeLogShow(4,"operate_3000数据格式不正确，无法解析。");
    }
 
 /*
