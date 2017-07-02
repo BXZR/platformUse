@@ -5,9 +5,13 @@
 //包括，数据库，redis,log以及自身的协议解析等等
 //其余的操作需要在本类之外的总控制中实现
 
-#include"redisUse.h" 
-#include"dataBaseUse.h" 
-#include"logUse.h" 
+//下面这些引用没有必要有，我在这里列出来是为了记录这个类使用了这些头文件包装的功能
+//所有由我编写的Use头文件都只会在operate.cpp里面引用
+//#include"redisUse.h" 
+//#include"dataBaseUse.h" 
+//#include"logUse.h" 
+
+
 //#include"record.h"//暂时无视配置文件
 #include <string.h>
 #include <iostream>

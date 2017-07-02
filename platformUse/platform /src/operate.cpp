@@ -1,14 +1,17 @@
 /*
 *FM201705240915
-*整个项目的入口类，也是唯一的总体操作类 
+*整个工程的入口类，也是唯一的总体操作类 
 *作为一个main脚本其实什么都不用做，调用已经写好的类就是唯一的职责（注意这里的封装）
 */
 
+
+//所有我编写的Use头文件原则上都只会在这里引用
+#include"logUse.h" 
 #include"redisUse.h" 
 #include"dataBaseUse.h" 
-#include"logUse.h" 
 #include"socketUse.h"
 #include"protocolUse.h"
+
 #include <unistd.h>
 
  logController  theLogC ;//日志文件控制器

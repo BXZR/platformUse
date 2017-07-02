@@ -1,7 +1,11 @@
 #ifndef __redisUse_H__    //意思是  "if not define __XXX_H__" 也就是没包含XXX.h
 #define __redisUse_H__   //就定义__XXX_H__
 //因为我的思路是尽可能简化早期功能耦合，所以这些功能大多写在头文件，这个方法是头文件保护，预防重复引用
-#include"logUse.h"
+//下面这些引用没有必要有，我在这里列出来是为了记录这个类使用了这些头文件包装的功能
+//所有由我编写的Use头文件都只会在operate.cpp里面引用
+//#include"logUse.h"
+
+
 #include<iostream>
 #include <hiredis/hiredis.h>
 #include <string>
