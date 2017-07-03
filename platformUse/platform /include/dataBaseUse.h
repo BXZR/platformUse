@@ -196,9 +196,34 @@ class DBController
 
      //--------------------------------------------------打包的数据库操作--------------------------------------------------------//
 
-       //向指定公司的指定表插入数据
-       void insertDataValues()
+       //向指定公司的指定表插入数据(没有type的版本)
+       void insertDataValues(string businessID ,string deviceID,string  * data , int length)
        {
+          int dataLength = length - 4;//，协议的前缀，命令字段，设备ID，类型，数据数组
+          if(dataLength >= 0)
+          {
+          string theMakeString =  
+          "insert into  iot_"+businessID+"_data  values(null,"+deviceID;
+          for(int i = 0 ; i < dataLength; i++)
+          {
+            theMakeString  += ", '"+data[4+i] +"'";
+          }
+          
+           time_t nowTime; 
+           struct tm *timer;
+           nowTime = time(NULL);
+           timer = localtime(&nowTime);
+           theMakeString += ", "+to_string(timer->tm_mday) +"";
+           theMakeString += ", 1";
+           theMakeString  += ");";
+           cout<< theMakeString  <<"     |"<<endl;
+           DBQuery(theMakeString);
+           makeLogShow(1,"数据插入成功");
+          }
+          else
+          {
+            makeLogShow(4,"数据长度不正确，插入失败");
+          }
        }
     
       //没有返回值的操作人家已经打包好了，直接用(因为权限超级强大，慎用)

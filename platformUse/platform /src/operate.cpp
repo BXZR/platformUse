@@ -27,18 +27,24 @@
     //协议解析的测试方法
     void playForProtocoUse()
     {
-         theProcolC .getString("0x17;1000;12;\0");
-	 theProcolC .getString("0x17;1001;10;10;10.2;\0");
-	 theProcolC .getString("0x17;1002;10;10;\0");
-	 theProcolC .getString("0x17;1003;10;100;\0");
-	 theProcolC .getString("0x17;2000;10;10;100;\0");
-	 theProcolC .getString("0x17;2001;17;\0");
-	 theProcolC .getString("0x17;2002;10;10;\0");
-	 theProcolC .getString("0x17;2003;10;19;\0");
-	 theProcolC .getString("0x17;2004;102;\0");
-	 theProcolC .getString("0x17;2005;103;\0");
-	 theProcolC .getString("0x17;3000;10;10;10;12;5;\0");
-	 theProcolC .getString("0x17;3001;10;10;\0");
+         //协议用的测试
+         //theProcolC .getString("0x17;1000;12;\0");
+	 //theProcolC .getString("0x17;1001;10;10;10.2;\0");
+	 //theProcolC .getString("0x17;1002;10;10;\0");
+	 //theProcolC .getString("0x17;1003;10;100;\0");
+	 //theProcolC .getString("0x17;2000;10;10;100;\0");
+	 //theProcolC .getString("0x17;2001;17;\0");
+	 //theProcolC .getString("0x17;2002;10;10;\0");
+	 //theProcolC .getString("0x17;2003;10;19;\0");
+	 //theProcolC .getString("0x17;2004;102;\0");
+	 //theProcolC .getString("0x17;2005;103;\0");
+	 //theProcolC .getString("0x17;3000;10;10;10;12;5;\0");
+	 //theProcolC .getString("0x17;3001;10;10;\0");
+        
+         //入库用测试
+         theProcolC .getString("0x17;1001;1000101000;10;10.2;\0");
+         theProcolC .getString("0x17;1001;1000102000;10;9989;\0");
+         theProcolC .getString("0x17;1001;1000103000;10;343;\0");
     }
 
 /*
@@ -63,11 +69,11 @@
 	  //theDBC.DBQuery("insert into test values ('jujietou4','shenyiyang5')");
 	 // theDBC.DBSelect("select * from test")  ;
  
-	 theDBC.makeDepartmentTable(1);
-	 theDBC.makeUserTable(1);
-	 theDBC.makeDevTable(1);
-	 theDBC.makeDataTable(1);//这个比较特殊，目前的参数表只有businessID, 后期应该会加上typeID
-	 theDBC.makeProjectTable(1);
+	 theDBC.makeDepartmentTable(1000);
+	 theDBC.makeUserTable(1000);
+	 theDBC.makeDevTable(1000);
+	 theDBC.makeDataTable(1000);//这个比较特殊，目前的参数表只有businessID, 后期应该会加上typeID
+	 theDBC.makeProjectTable(1000);
             cout<<"\n--------数据库测试成功-------\n"<<endl;
 
 	}
@@ -197,9 +203,9 @@ int main()
 	 //上面这些是必要的初始化，测试方法和运行方法怎么玩都行，这里一定不能缺项，而且要保证顺序
 
         //playForLog(); //日志测试方法
-        // playForDB();//数据库模块测试方法
+       //  playForDB();//数据库模块测试方法
         //playforRedis();//Redis模块测测试方法 
-        //playForProtocoUse();//协议解析测试方法
+         playForProtocoUse();//协议解析测试方法
         server();//服务器方法，真正地开启这个服务器
         //最核心的功能就是入库，其他的都是到时候扩展就好
         //可以考虑的点：网络连接/入库/库表

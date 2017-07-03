@@ -212,14 +212,26 @@ class protocolUse
 	数据字段2：数据类型(温湿度等)
 	数据字段3：采集的数据(整数浮点数均可)
     */
+
+   //str.assign(base, 10, 9);    //取出下标10开始的9长度的子串
+   // str.assign("pangrams are cool", 7);  //取出前7位的子串
    void operate_1001(string * information,int length)
    {
      if(length ==5)//开头，类型，数据1，数据2，数据3
      {
-     int deviceID =  stringToInt(information[2]);
+     string theID = information[2];
      int dataTypeID = stringToInt(information[3]);
      string data = information[4];
-
+     //ID的排布样式位10位，前4位位公司ID，中间两位是数据类型ID（似乎现在没有使用，预留），最后是公司内部的设备ID
+     string businessID ;
+     businessID.assign (theID ,0, 4);
+     string typeID;
+     typeID.assign (theID, 4,2);
+     string deviceID;
+     deviceID.assign(theID ,6,4);
+    // cout<< "获得的ID - "+ theID<<endl;
+    // cout<<"切分结果 - "+ businessID +" - " + typeID +" - "+ deviceID<<endl;
+     theDBC .insertDataValues( businessID ,deviceID, information , length);
      //接下来应该是缓存和数据库的操作
       makeLogShow(0,"operate_1001 解析完成");
       return ;
