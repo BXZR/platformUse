@@ -42,9 +42,9 @@
 	 //theProcolC .getString("0x17;3001;10;10;\0");
         
          //入库用测试
-         theProcolC .getString("0x17;1001;1000101000;10;10.2;\0");
-         theProcolC .getString("0x17;1001;1000102000;10;9989;\0");
-         theProcolC .getString("0x17;1001;1000103000;10;343;\0");
+         theProcolC .getString("0x17;1001;1000011000;10;10.2;\0");
+         theProcolC .getString("0x17;1001;1000012000;10;9989;\0");
+         theProcolC .getString("0x17;1001;1000013000;10;343;\0");
     }
 
 /*
@@ -192,7 +192,8 @@ int main()
           
           //不断删除和生成的测试数据库 "demos"
           //测试用数据库 "platformUse"
-          //正式用数据库 "platformIOT"
+          //留待扩展的数据库数据库 "platformIOT"
+          //暂时正式使用的数据库icpscloud
 	 theDBC.InitTheDBModule(theLogC,"localhost","root","root","demos");//数据库模块的初始化
 	 //参数从左到右分别是：log模块控制器，目标主机，用户名，密码，要用到的数据库名字
 	 theRedisC.InitRedisModule(theLogC,"127.0.0.1",6379);//redis模块初始化
@@ -206,7 +207,7 @@ int main()
        //  playForDB();//数据库模块测试方法
         //playforRedis();//Redis模块测测试方法 
          playForProtocoUse();//协议解析测试方法
-        server();//服务器方法，真正地开启这个服务器
+         server();//服务器方法，真正地开启这个服务器
         //最核心的功能就是入库，其他的都是到时候扩展就好
         //可以考虑的点：网络连接/入库/库表
 

@@ -231,7 +231,8 @@ class protocolUse
      deviceID.assign(theID ,6,4);
     // cout<< "获得的ID - "+ theID<<endl;
     // cout<<"切分结果 - "+ businessID +" - " + typeID +" - "+ deviceID<<endl;
-     theDBC .insertDataValues( businessID ,deviceID, information , length);
+
+     theDBC .insertDataValues( typeID ,theID, information , length);
      //接下来应该是缓存和数据库的操作
       makeLogShow(0,"operate_1001 解析完成");
       return ;

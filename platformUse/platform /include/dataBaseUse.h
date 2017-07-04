@@ -35,6 +35,7 @@ class DBController
       }
       
       //--------------------------------------------------打包的建表操作--------------------------------------------------------//
+      //这些方法暂时废弃，留待扩展的时候继续使用
       //说明： 这些方法有可能永远不会使用，并且因为现在在设定初期，参数表未必同意，因此没有再做额外的封装 
       //动态建立公司部门表
       /*
@@ -196,8 +197,10 @@ class DBController
 
      //--------------------------------------------------打包的数据库操作--------------------------------------------------------//
 
+
        //向指定公司的指定表插入数据(没有type的版本)
-       void insertDataValues(string businessID ,string deviceID,string  * data , int length)
+       //这个方法暂时废弃，留待扩展使用
+       void insertDataValuesWithBusinessID(string businessID ,string deviceID,string  * data , int length)
        {
           int dataLength = length - 4;//，协议的前缀，命令字段，设备ID，类型，数据数组
           if(dataLength >= 0)
@@ -226,6 +229,33 @@ class DBController
           }
        }
     
+        void insertDataValues(string typeID ,string deviceID,string  * data , int length)
+       {
+          int dataLength = length - 4;//，协议的前缀，命令字段，设备ID，类型，数据数组
+          if(dataLength >= 0)
+          {
+          string theMakeString =  
+          "insert into  iot_"+ typeID  +"_data  values(null,"+deviceID;
+          for(int i = 0 ; i < dataLength; i++)
+          {
+            theMakeString  += ", '"+data[4+i] +"'";
+          }
+          
+           time_t timeNow =  time(0);  // Unix时间戳
+           theMakeString += ", "+to_string(timeNow ) +"";
+           theMakeString += ", 1";
+           theMakeString  += ");";
+           cout<< theMakeString  <<"     |"<<endl;
+           DBQuery(theMakeString);
+           makeLogShow(1,"数据插入成功");
+          }
+          else
+          {
+            makeLogShow(4,"数据长度不正确，插入失败");
+          }
+       }
+
+
       //没有返回值的操作人家已经打包好了，直接用(因为权限超级强大，慎用)
       //这个方法只是在增加新的数据的时候才可以使用，一般不会使用这种语句
       //当然，作为内部，这是一个究极的建表操作，因为有一些表是需要动态建立和删除的
