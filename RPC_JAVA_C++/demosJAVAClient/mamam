@@ -1,0 +1,2 @@
+javac -classpath /usr/local/lib/libthrift-0.10.0.jar:/usr/local/lib/log4j-1.2.17.jar:/usr/local/lib/commons-logging-1.2.jar:/usr/local/lib/slf4j-api-1.7.12.jar UserClient.java ./gen-java/*.java    
+java -classpath .:./gen-java:/usr/local/lib/libthrift-0.10.0.jar:/usr/local/lib/log4j-1.2.17.jar:/usr/local/lib/commons-logging-1.2.jar:/usr/local/lib/slf4j-api-1.7.12.jar:/usr/local/lib/slf4j-log4j12-1.7.12.jar UserClient 
